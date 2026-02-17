@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DragDropProvider } from "@dnd-kit/react";
+import { RestrictToWindow } from "@dnd-kit/dom/modifiers";
 import Header from "./Header";
 import Form from "./Form";
 import Note from "./Note";
@@ -97,10 +98,13 @@ export default function NotesApp() {
   const MAX_NOTES = 10;
 
   return (
-    <DragDropProvider onDragEnd={handleDragEnd}>
-      <div>
-        <div className="relative top-0 left-0 min-h-[calc(100vh-35px)]">
-          <Header />
+    <div>
+      <Header />
+      <DragDropProvider
+        onDragEnd={handleDragEnd}
+        modifiers={[RestrictToWindow]}
+      >
+        {/* <div className="relative top-0 left-0 min-h-[calc(100vh-35px)]"> */}
           <Form
             onAdd={addNote}
             isHidden={notes.length >= MAX_NOTES}
@@ -119,9 +123,9 @@ export default function NotesApp() {
               />
             ))}
           </div>
-        </div>
-        <Footer />
-      </div>
-    </DragDropProvider>
+        {/* </div> */}
+      </DragDropProvider>
+      <Footer />
+    </div>
   );
 }
