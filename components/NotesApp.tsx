@@ -38,7 +38,6 @@ export default function NotesApp() {
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [mounted, setMounted] = useState(false);
 
-  // Load notes from localStorage on mount
   useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem("notes");
@@ -51,7 +50,6 @@ export default function NotesApp() {
     }
   }, []);
 
-  // Save notes to localStorage whenever they change
   useEffect(() => {
     if (mounted) {
       localStorage.setItem("notes", JSON.stringify(notes));
@@ -73,13 +71,12 @@ export default function NotesApp() {
   }
 
   function handleDragEnd(event: any) {
-    if (event.id === "note-form") {
-      // Don't save form position changes
-      return;
-    }
+    const id = event.operation?.source?.id;
 
-    const noteId = event.id.toString().replace("note-", "");
-    const { x, y } = event.delta;
+    if (!id || id === "note-form") return;
+
+    const noteId = id.toString().replace("note-", "");
+    const transform = event.operation?.transform;
 
     setNotes((prevNotes) =>
       prevNotes.map((note) => {
@@ -87,8 +84,8 @@ export default function NotesApp() {
           return {
             ...note,
             position: {
-              x: note.position.x + x,
-              y: note.position.y + y,
+              x: note.position.x + (transform?.x || 0),
+              y: note.position.y + (transform?.y || 0),
             },
           };
         }
@@ -110,7 +107,7 @@ export default function NotesApp() {
             currentCount={notes.length}
             maxCount={MAX_NOTES}
           />
-          <div className="notes">
+          <div>
             {notes.map((note) => (
               <Note
                 key={note.id}

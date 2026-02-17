@@ -51,10 +51,6 @@ export default function Form({
       style={{ opacity: isDragging ? 0.5 : 1 }}
       className="flex flex-col bg-white border-2 border-[rgb(138,138,138)] rounded-[30px] p-5 w-[400px] max-w-[90vw] absolute top-[400px] right-[200px] z-10 shadow-md md:right-1/2 md:translate-x-1/2"
     >
-      <div className="cursor-move p-2.5 mb-2.5 border-b border-gray-200">
-        <span className="text-xl">⋮⋮</span>
-      </div>
-
       <input
         required
         maxLength={50}
@@ -77,7 +73,7 @@ export default function Form({
 
       <button
         type="submit"
-        className="font-bubbles self-end text-[30px] text-[rgb(138,138,138)] border-2 border-[rgb(138,138,138)] rounded-full p-2.5 mt-2.5 -mb-10 bg-white hover:cursor-pointer hover:scale-105 hover:bg-gray-50 transition-all duration-200"
+        className="font-[--font-rubik-bubbles] self-end text-[30px] text-[rgb(138,138,138)] border-2 border-[rgb(138,138,138)] rounded-full p-2.5 mt-2.5 -mb-10 bg-white hover:cursor-pointer hover:scale-105 hover:bg-gray-50 transition-all duration-200"
       >
         add
       </button>
