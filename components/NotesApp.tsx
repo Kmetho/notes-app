@@ -42,9 +42,11 @@ function getRandomPosition(): { x: number; y: number } {
 export default function NotesApp() {
   const [notes, setNotes] = useState<NoteType[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     setMounted(true);
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     const saved = localStorage.getItem("notes");
     if (saved) {
       try {
@@ -57,23 +59,8 @@ export default function NotesApp() {
 
   useEffect(() => {
     function handleResize() {
-      setNotes((prevNotes) =>
-        prevNotes.map((note) => ({
-          ...note,
-          position: {
-            x: Math.max(
-              0,
-              Math.min(note.position.x, window.innerWidth - NOTE_WIDTH),
-            ),
-            y: Math.max(
-              0,
-              Math.min(note.position.y, window.innerHeight - NOTE_HEIGHT),
-            ),
-          },
-        })),
-      );
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     }
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -138,7 +125,6 @@ export default function NotesApp() {
     if (!id || id === "note-form") return;
 
     const noteId = id.toString().replace("note-", "");
-
     setNotes((prevNotes) => {
       const index = prevNotes.findIndex((n) => n.id === noteId);
       if (index === -1) return prevNotes;
@@ -169,7 +155,16 @@ export default function NotesApp() {
             id={note.id}
             title={note.title}
             content={note.content}
-            position={note.position}
+            position={{
+              x: Math.max(
+                0,
+                Math.min(note.position.x, windowSize.width - NOTE_WIDTH),
+              ),
+              y: Math.max(
+                0,
+                Math.min(note.position.y, windowSize.height - NOTE_HEIGHT),
+              ),
+            }}
             onDelete={deleteNote}
             onBringToFront={bringToFront}
           />
