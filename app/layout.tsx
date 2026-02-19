@@ -3,13 +3,13 @@ import { Fira_Sans, Rubik_Bubbles } from "next/font/google";
 import "./globals.css";
 
 const firaSans = Fira_Sans({
-  weight: ["400", "700"],
-  subsets: ["latin"],
+  variable: "--font-fira-sans",
+  weight: ["400", "500", "700"],
 });
 
 const rubikBubbles = Rubik_Bubbles({
-  weight: "400",
-  subsets: ["latin"],
+  variable: "--font-rubik-bubbles",
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -24,7 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-[#d0cfec]">{children}</body>
+      <body
+        className={`${firaSans.variable} ${rubikBubbles.variable} antialiased bg-[#d0cfec] font-[Fira_Sans] font-normal`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

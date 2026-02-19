@@ -38,7 +38,7 @@ export default function Note({
           {content}
         </p>
         <button
-          className="font-bubbles self-end text-[22px] sm:text-[30px] text-[rgb(138,138,138)] border-2 border-[rgb(138,138,138)] rounded-full p-2 sm:p-2.5 mt-2.5 -mb-10 bg-white hover:cursor-pointer hover:scale-105 hover:bg-gray-50 transition-all duration-200"
+          className="font-[Rubik_Bubbles] font-normal self-end text-[22px] sm:text-[30px] text-[rgb(138,138,138)] border-2 border-[rgb(138,138,138)] rounded-full p-2 sm:p-2.5 mt-2.5 -mb-10 bg-white hover:cursor-pointer hover:scale-105 hover:bg-gray-50 transition-all duration-200"
           onClick={() => onDelete(id)}
         >
           delete

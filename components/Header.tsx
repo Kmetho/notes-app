@@ -3,7 +3,9 @@
 export default function Header() {
   return (
     <header className="fixed top-0 left-0 p-2 sm:p-2.5">
-      <h1 className="font-bubbles text-2xl sm:text-3xl">notes</h1>
+      <h1 className="font-[Rubik_Bubbles] text-white text-9xl sm:text-[250px]">
+        notes
+      </h1>
     </header>
   );
 }
