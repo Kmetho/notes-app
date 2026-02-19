@@ -8,6 +8,7 @@ interface NoteProps {
   content: string;
   position: { x: number; y: number };
   onDelete: (id: string) => void;
+  onBringToFront: (id: string) => void;
 }
 
 export default function Note({
@@ -16,6 +17,7 @@ export default function Note({
   content,
   position,
   onDelete,
+  onBringToFront,
 }: NoteProps) {
   const { ref } = useDraggable({
     id: `note-${id}`,
@@ -26,6 +28,7 @@ export default function Note({
       ref={ref}
       style={{ left: position.x, top: position.y }}
       className="fixed"
+      onClick={() => onBringToFront(id)}
     >
       <div className="flex flex-col bg-white border-2 border-[rgb(138,138,138)] rounded-[30px] p-3 sm:p-5 w-[400px] max-w-[90vw] shadow-md cursor-move">
         <h1 className="w-full p-1.5 sm:p-2.5 text-[1em] sm:text-[1.2em] mb-1.5 whitespace-pre-wrap break-words">

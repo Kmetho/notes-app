@@ -56,26 +56,6 @@ export default function NotesApp() {
   }, []);
 
   useEffect(() => {
-    if (mounted) {
-      localStorage.setItem("notes", JSON.stringify(notes));
-    }
-  }, [notes, mounted]);
-
-  function addNote(title: string, content: string) {
-    const newNote: NoteType = {
-      id: generateId(),
-      title,
-      content,
-      position: getRandomPosition(),
-    };
-    setNotes([...notes, newNote]);
-  }
-
-  function deleteNote(id: string) {
-    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
-  }
-
-  useEffect(() => {
     function handleResize() {
       setNotes((prevNotes) =>
         prevNotes.map((note) => ({
@@ -97,6 +77,36 @@ export default function NotesApp() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem("notes", JSON.stringify(notes));
+    }
+  }, [notes, mounted]);
+
+  function addNote(title: string, content: string) {
+    const newNote: NoteType = {
+      id: generateId(),
+      title,
+      content,
+      position: getRandomPosition(),
+    };
+    setNotes([...notes, newNote]);
+  }
+
+  function deleteNote(id: string) {
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+  }
+
+  function bringToFront(id: string) {
+    setNotes((prevNotes) => {
+      const index = prevNotes.findIndex((n) => n.id === id);
+      if (index === -1 || index === prevNotes.length - 1) return prevNotes;
+      const reordered = [...prevNotes];
+      reordered.push(reordered.splice(index, 1)[0]);
+      return reordered;
+    });
+  }
 
   function handleDragEnd(event: any) {
     const id = event.operation?.source?.id;
@@ -123,10 +133,26 @@ export default function NotesApp() {
     );
   }
 
+  function handleDragStart(event: any) {
+    const id = event.operation?.source?.id;
+    if (!id || id === "note-form") return;
+
+    const noteId = id.toString().replace("note-", "");
+
+    setNotes((prevNotes) => {
+      const index = prevNotes.findIndex((n) => n.id === noteId);
+      if (index === -1) return prevNotes;
+      const reordered = [...prevNotes];
+      reordered.push(reordered.splice(index, 1)[0]);
+      return reordered;
+    });
+  }
+
   return (
     <div>
       <Header />
       <DragDropProvider
+        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         modifiers={[{ plugin: RestrictToWindow }]}
       >
@@ -145,6 +171,7 @@ export default function NotesApp() {
             content={note.content}
             position={note.position}
             onDelete={deleteNote}
+            onBringToFront={bringToFront}
           />
         ))}
       </DragDropProvider>
