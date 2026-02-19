@@ -2,8 +2,8 @@
 
 export default function Header() {
   return (
-    <header className="absolute top-[0px] left-[0px] p-2.5">
-      <h1 className="font-bubbles">notes</h1>
+    <header className="fixed top-0 left-0 p-2 sm:p-2.5">
+      <h1 className="font-bubbles text-2xl sm:text-3xl">notes</h1>
     </header>
   );
 }
