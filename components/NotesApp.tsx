@@ -8,6 +8,10 @@ import Form from "./Form";
 import Note from "./Note";
 import Footer from "./Footer";
 
+const NOTE_WIDTH = 400;
+const NOTE_HEIGHT = 200;
+const MAX_NOTES = 10;
+
 export interface NoteType {
   id: string;
   title: string;
@@ -16,7 +20,7 @@ export interface NoteType {
 }
 
 function generateId(): string {
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 }
 
 function getRandomPosition(): { x: number; y: number } {
@@ -71,9 +75,31 @@ export default function NotesApp() {
     setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
   }
 
+  useEffect(() => {
+    function handleResize() {
+      setNotes((prevNotes) =>
+        prevNotes.map((note) => ({
+          ...note,
+          position: {
+            x: Math.max(
+              0,
+              Math.min(note.position.x, window.innerWidth - NOTE_WIDTH),
+            ),
+            y: Math.max(
+              0,
+              Math.min(note.position.y, window.innerHeight - NOTE_HEIGHT),
+            ),
+          },
+        })),
+      );
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   function handleDragEnd(event: any) {
     const id = event.operation?.source?.id;
-
     if (!id || id === "note-form") return;
 
     const noteId = id.toString().replace("note-", "");
@@ -82,11 +108,13 @@ export default function NotesApp() {
     setNotes((prevNotes) =>
       prevNotes.map((note) => {
         if (note.id === noteId) {
+          const newX = note.position.x + (transform?.x || 0);
+          const newY = note.position.y + (transform?.y || 0);
           return {
             ...note,
             position: {
-              x: note.position.x + (transform?.x || 0),
-              y: note.position.y + (transform?.y || 0),
+              x: Math.max(0, Math.min(newX, window.innerWidth - NOTE_WIDTH)),
+              y: Math.max(0, Math.min(newY, window.innerHeight - NOTE_HEIGHT)),
             },
           };
         }
@@ -95,35 +123,30 @@ export default function NotesApp() {
     );
   }
 
-  const MAX_NOTES = 10;
-
   return (
     <div>
       <Header />
       <DragDropProvider
         onDragEnd={handleDragEnd}
-        modifiers={[RestrictToWindow]}
+        modifiers={[{ plugin: RestrictToWindow }]}
       >
-        {/* <div className="relative top-0 left-0 min-h-[calc(100vh-35px)]"> */}
-          <Form
-            onAdd={addNote}
-            isHidden={notes.length >= MAX_NOTES}
-            currentCount={notes.length}
-            maxCount={MAX_NOTES}
+        <Form
+          onAdd={addNote}
+          isHidden={notes.length >= MAX_NOTES}
+          currentCount={notes.length}
+          maxCount={MAX_NOTES}
+        />
+
+        {notes.map((note) => (
+          <Note
+            key={note.id}
+            id={note.id}
+            title={note.title}
+            content={note.content}
+            position={note.position}
+            onDelete={deleteNote}
           />
-          <div>
-            {notes.map((note) => (
-              <Note
-                key={note.id}
-                id={note.id}
-                title={note.title}
-                content={note.content}
-                position={note.position}
-                onDelete={deleteNote}
-              />
-            ))}
-          </div>
-        {/* </div> */}
+        ))}
       </DragDropProvider>
       <Footer />
     </div>
