@@ -15,8 +15,7 @@ Best experienced on desktop (where dragging things around just feels right).
 ♥ Tailwind CSS – utility-first styling (first time using it, now slightly addicted) <br/>
 ♥ @dnd-kit – smooth drag-and-drop functionality <br/>
 ♥ Local Storage – persistent notes without a backend <br/>
-♥ Vercel – deployment <br/>
-All dependencies are up to date.
+♥ Vercel – deployment
 
 🎯 Features <br/>
 ♥ Create, edit, and delete notes <br/>
